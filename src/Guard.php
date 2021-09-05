@@ -60,7 +60,11 @@ class Guard
             }
         }
 
-        if ($token = $request->bearerToken()) {
+        $token = $request->bearerToken();
+        if (config('sanctum.token_key_header')) {
+            $token = $request->header(config('sanctum.token_key_header'));
+        }
+        if ($token) {
             $model = Sanctum::$personalAccessTokenModel;
 
             $accessToken = $model::findToken($token);
